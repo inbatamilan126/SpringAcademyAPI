@@ -29,7 +29,7 @@ public class Enrollment {
     @JoinColumn(name = "class_session_id")
     private ClassSession classSession;
 
-    private String Status;
+    private String status;
 
     private LocalDate enrollmentDate;
 
