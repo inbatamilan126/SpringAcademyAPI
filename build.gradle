@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '4.0.6'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.openapi.generator' version '7.4.0'
 }
 
 group = 'com.academy'
@@ -33,7 +34,50 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	testAnnotationProcessor 'org.projectlombok:lombok'
+
+	ext {
+		mapstructVersion = "1.5.5.Final"
+	}
+
+	implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+
+	implementation "io.swagger.core.v3:swagger-annotations:2.2.20"
+	implementation "jakarta.validation:jakarta.validation-api"
+
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0"
+
+	annotationProcessor "org.projectlombok:lombok-mapstruct-binding:0.2.0"
+	annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 }
+
+// 5. OpenAPI Generation Task Configuration
+openApiGenerate {
+	generatorName = "spring"
+	// We will create this file next
+	inputSpec = file("src/main/resources/api-docs/academy-api.yaml").absolutePath.replace("\\", "/")
+	outputDir = "$buildDir/generated".toString()
+	apiPackage = "com.academy.api"
+	modelPackage = "com.academy.dto"
+	configOptions = [
+			dateLibrary: "java8",
+			interfaceOnly: "true",      // Generates API interfaces, you write the @RestControllers
+			useSpringBoot3: "true",     // Critical for Boot 4: Forces jakarta.* imports instead of javax.*
+			useTags: "true",             // Groups endpoints logically in the generated code
+			openApiNullable: "false"
+	]
+}
+
+// 6. Tell Gradle where to find the generated code
+sourceSets {
+	main {
+		java {
+			srcDir "$buildDir/generated/src/main/java"
+		}
+	}
+}
+
+// 7. Ensure OpenAPI generates the DTOs and Interfaces before compiling Java
+compileJava.dependsOn tasks.openApiGenerate
 
 tasks.named('test') {
 	useJUnitPlatform()

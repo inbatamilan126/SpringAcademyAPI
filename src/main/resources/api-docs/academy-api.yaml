@@ -1,0 +1,146 @@
+openapi: 3.1.0
+info:
+  title: Academy Scheduling and Progression API
+  description: Management API for class sessions, enrollments and student progression
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080'
+    description: Local Development server
+
+tags:
+  - name: Class Sessions
+    description: Endpoints for managing training batches
+  - name: Enrollments
+    description: Endpoints for student class registrations
+
+paths:
+  /api/classes:
+    get:
+      tags:
+        - Class Sessions
+      summary: Get all class sessions
+      operationId: getAllClasses
+      responses:
+        200:
+          description: A list of classes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ClassSessionDTO'
+    post:
+      tags:
+        - Class Sessions
+      summary: Create a new class session
+      operationId: createClass
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClassSessionCreateRequest'
+      responses:
+        '201':
+          description: Class created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClassSessionDTO'
+
+  /api/classes/{classId}/enroll:
+    post:
+      tags:
+        - Enrollments
+      summary: Enroll a student in a class
+      operationId: enrollStudent
+      parameters:
+        - name: classId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EnrollmentRequest'
+      responses:
+        '201':
+          description: Enrollment successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EnrollmentDTO'
+
+components:
+  schemas:
+    ClassSessionDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        title:
+          type: string
+          example: "Kalaripayattu - Beginner Batch"
+        schedule:
+          type: string
+          example: "Mon/Wed 06:00 AM"
+        capacity:
+          type: integer
+          example: 20
+        instructorId:
+          type: integer
+          format: int64
+
+    ClassSessionCreateRequest:
+      type: object
+      required:
+        - title
+        - schedule
+        - capacity
+        - instructorId
+      properties:
+        title:
+          type: string
+          example: "Kalaripayattu - Beginner Batch"
+        schedule:
+          type: string
+          example: "Mon/Wed 06:00 AM"
+        capacity:
+          type: integer
+          example: 20
+        instructorId:
+          type: integer
+          format: int64
+
+    EnrollmentRequest:
+      type: object
+      required:
+        - studentId
+      properties:
+        studentId:
+          type: integer
+          format: int64
+
+    EnrollmentDTO:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        studentId:
+          type: integer
+          format: int64
+        classSessionId:
+          type: integer
+          format: int64
+        status:
+          type: string
+          example: "ACTIVE"
+        enrollmentDate:
+          type: string
+          format: date
