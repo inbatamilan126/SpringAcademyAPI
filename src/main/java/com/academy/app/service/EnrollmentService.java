@@ -50,4 +50,12 @@ public class EnrollmentService {
         Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
         return enrollmentMapper.toDto(savedEnrollment);
     }
+
+    @Transactional
+    public void deleteEnrollmentById(Long enrollmentId) {
+        Enrollment enrollment = enrollmentRepository.findById(enrollmentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Enrollment not found"));
+        enrollment.setStatus("DROPPED");
+        enrollmentRepository.save(enrollment);
+    }
 }

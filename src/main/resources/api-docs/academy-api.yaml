@@ -145,6 +145,23 @@ paths:
                 items:
                   $ref: "#/components/schemas/EnrollmentDTO"
 
+  /api/enrollments/{enrollmentId}:
+    delete:
+      tags:
+        - Enrollments
+      summary: Delete an enrollment
+      operationId: deleteEnrollmentById
+      parameters:
+        - name: enrollmentId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: No content - successfully deleted
+
 components:
   schemas:
     DayOfWeek:

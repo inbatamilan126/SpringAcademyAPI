@@ -20,4 +20,10 @@ public class EnrollmentController implements EnrollmentsApi {
         EnrollmentDTO enrollmentDTO = enrollmentService.enrollStudent(classId, request.getStudentId());
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentDTO);
     }
+
+    @Override
+    public ResponseEntity<Void> deleteEnrollmentById(Long enrollmentId) {
+        enrollmentService.deleteEnrollmentById(enrollmentId);
+        return ResponseEntity.noContent().build();
+    }
 }

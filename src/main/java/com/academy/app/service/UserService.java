@@ -8,6 +8,7 @@ import com.academy.app.repository.UserRepository;
 import com.academy.dto.EnrollmentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,6 +20,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final EnrollmentMapper enrollmentMapper;
 
+    @Transactional(readOnly = true)
     public List<EnrollmentDTO> getEnrollmentsByStudentId(Long studentId) {
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
