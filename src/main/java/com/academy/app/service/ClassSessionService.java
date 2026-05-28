@@ -40,4 +40,11 @@ public class ClassSessionService {
         ClassSession savedSession = classSessionRepository.save(classSession);
         return classSessionMapper.toDto(savedSession);
     }
+
+    @Transactional(readOnly = true)
+    public ClassSessionDTO getClassById(Long classId) {
+        ClassSession classSession = classSessionRepository.findById(classId)
+                .orElseThrow(() -> new ResourceNotFoundException("Class not found"));
+        return classSessionMapper.toDto(classSession);
+    }
 }

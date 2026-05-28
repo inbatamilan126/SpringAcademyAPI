@@ -26,4 +26,9 @@ public class ClassSessionController implements ClassSessionsApi {
     public ResponseEntity<ClassSessionDTO> createClass(ClassSessionCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(classSessionService.createClass(request));
     }
+
+    @Override
+    public ResponseEntity<ClassSessionDTO> getClassByID(Long classId) {
+        return ResponseEntity.ok(classSessionService.getClassById(classId));
+    }
 }
