@@ -26,5 +26,5 @@ public class Progression {
 
     private String levelName;
 
-    private LocalDate dataAchieved;
+    private LocalDate dateAchieved;
 }

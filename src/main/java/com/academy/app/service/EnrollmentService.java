@@ -27,8 +27,16 @@ public class EnrollmentService {
 
     @Transactional
     public EnrollmentDTO enrollStudent(Long classId, Long studentId) {
+        // TODO: Stop instructors from enrolling
         if (enrollmentRepository.existsByStudentIdAndClassSessionId(studentId, classId)) {
-            throw new BusinessValidationException("Student is already enrolled in this class");
+            if (enrollmentRepository.existsByStudentIdAndClassSessionIdAndStatus(studentId, classId, "ACTIVE")) {
+                throw new BusinessValidationException("Student is already enrolled in this class");
+            } else {
+                Enrollment enrollment = enrollmentRepository.findEnrollmentByClassSessionIdAndStudentId(classId, studentId);
+                enrollment.setStatus("ACTIVE");
+                Enrollment savedEnrollment = enrollmentRepository.save(enrollment);
+                return enrollmentMapper.toDto(enrollment);
+            }
         }
 
         ClassSession classSession = classSessionRepository.findById(classId)
@@ -36,8 +44,8 @@ public class EnrollmentService {
         User student = userRepository.findById(studentId)
                 .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
 
-        long currentEnrollements = enrollmentRepository.countByClassSessionIdAndStatus(classId, "ACTIVE");
-        if (currentEnrollements >= classSession.getCapacity()) {
+        long currentEnrollments = enrollmentRepository.countByClassSessionIdAndStatus(classId, "ACTIVE");
+        if (currentEnrollments >= classSession.getCapacity()) {
             throw new BusinessValidationException("Class is at full capacity");
         }
 
