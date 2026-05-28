@@ -12,6 +12,8 @@ tags:
     description: Endpoints for managing training batches
   - name: Enrollments
     description: Endpoints for student class registrations
+  - name: Users
+    description: Endpoints for managing users
 
 paths:
   /api/classes:
@@ -119,6 +121,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EnrollmentDTO'
+
+  /api/users/{userId}/enrollments:
+    get:
+      tags:
+        - Users
+      summary: Get all active enrollments of a student
+      operationId: getEnrollmentsByStudentId
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        200:
+          description: A list of enrollments of the student
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/EnrollmentDTO"
 
 components:
   schemas:
