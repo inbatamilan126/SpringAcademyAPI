@@ -4,6 +4,7 @@ import com.academy.api.ClassSessionsApi;
 import com.academy.app.service.ClassSessionService;
 import com.academy.dto.ClassSessionCreateRequest;
 import com.academy.dto.ClassSessionDTO;
+import com.academy.dto.StudentDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,5 +31,10 @@ public class ClassSessionController implements ClassSessionsApi {
     @Override
     public ResponseEntity<ClassSessionDTO> getClassByID(Long classId) {
         return ResponseEntity.ok(classSessionService.getClassById(classId));
+    }
+
+    @Override
+    public ResponseEntity<List<StudentDTO>> getStudentsByClassID(Long classId) {
+        return ResponseEntity.ok(classSessionService.getStudentsByClassId(classId));
     }
 }

@@ -88,6 +88,9 @@ paths:
           content:
             application/json:
               schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudentDTO'
 
 
   /api/classes/{classId}/enroll:
@@ -212,7 +215,7 @@ components:
     StudentDTO:
       type: object
       properties:
-        id:
+        studentId:
           type: integer
           format: int64
         name:
